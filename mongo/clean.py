@@ -1,5 +1,4 @@
 import re
-from colorama import Fore, Back, Style, init
 
 ALLOWED_DOMAINS = {
     '@gmail.com',
@@ -14,8 +13,8 @@ def unique_mails(raw_data):
 
     unique_emails = list(dict.fromkeys(raw_data))
 
-    print(Fore.CYAN + f"[=]   Unique Mails (Final): {len(unique_emails)}")
-    print(Fore.CYAN + f"[=]   Duplicate Mails (Removed): {len(raw_data) - len(unique_emails)}\n")
+    print(f"[=]   Unique Mails (Final): {len(unique_emails)}")
+    print(f"[=]   Duplicate Mails (Removed): {len(raw_data) - len(unique_emails)}\n")
     
     return unique_emails
 
@@ -43,7 +42,13 @@ def valid_email(raw_data):
     
     valid_mails = list(dict.fromkeys(valid_mails))
 
-    print(Fore.CYAN + f"[=]   Valid Mails (Final): {len(valid_mails)}")
-    print(Fore.CYAN + f"[=]   Invalid Mails (Removed): {len(raw_data) - len(valid_mails)}\n")    
+    print(f"[=]   Valid Mails (Final): {len(valid_mails)}")
+    print(f"[=]   Invalid Mails (Removed): {len(raw_data) - len(valid_mails)}\n")    
 
     return valid_mails
+
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
