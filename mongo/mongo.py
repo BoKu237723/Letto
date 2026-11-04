@@ -20,7 +20,7 @@ except Exception as e:
     raise Exception(
         "The following error occurred: ", e)
 
-def clean_data(raw_data): # Return Cleaned Data / Invalid Data
+def clean_data(raw_data): # Return Cleaned Data (List) / Invalid Data (Int)
     c_valid_mails = valid_email(raw_data)
     c_unique_mails = unique_mails(c_valid_mails) # This is final
 
@@ -85,13 +85,82 @@ def show_cleaned_events():
     for event in events:
         event_names.extend(event.keys())
 
-    print(event_names)
+    print("[+] Total Events in Database\n")
+
+    for event in event_names:
+        print(f"[{event_names.index(event)}] {event}")
+
+    return event_names # List
+
+def process_data(numbers):
+    print("Here")
+    pass
 
 def current_data(): # Only cleaned data
-    print("[+] Current Available Events")
 
-    user_range = input("[=] Select Your Range: ") # String
+    def help_fun(): # Maybe add more in the future?
+        print("\n[+] These are Sample Formats\n[+] Index starts at 0\n[+] (All Events except 8 and 10) 0-7 9 11-12\n[+] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
 
-# file_processing()
-show_cleaned_events()
-client.close()
+    total_events = show_cleaned_events() # Returns List
+
+    while True:
+        try:
+            user_range = input("\n[=] Select Your Range (? for help): ").strip() # String
+            numbers = []
+
+            if user_range == "?":
+                help_fun()
+                continue
+
+            elif user_range == "*":
+                numbers.extend("*")
+                process_data(numbers)
+                break
+
+            else:
+                for i in user_range.split(" "):
+                    if "-" in i:
+                        start, end = map(int, i.split("-"))
+                        numbers.extend(range(start, end + 1))
+                    else:
+                        numbers.append(int(i))
+
+                    greater_check = any(x > (len(total_events)-1) for x in numbers)
+
+                if greater_check == True:
+                    print(f"Only {len(total_events) - 1} exists.")
+                    continue
+
+                process_data(numbers)
+                break
+
+        except Exception as e:
+            print(f"Input Error: {e}")
+
+def main():
+    print("1. Process new event data \n2. Show current Events' data from Database")
+    print("3. Show Specific Event Data\n4. Process data to current Pipeline")
+    while True:
+        try:
+            user_input = int(input("Your Input: "))
+            if user_input == 1:
+                file_processing()
+            elif user_input == 2: # TODO
+                pass
+            elif user_input == 3: # TODO
+                pass
+            elif user_input == 4: # TODO
+                current_data()
+                break
+            else:
+                print("Invalid input.")
+                continue
+
+            break
+        except ValueError:
+            print("Enter only integers.")
+            continue
+    client.close()
+
+if __name__ == "__main__":
+    main()
