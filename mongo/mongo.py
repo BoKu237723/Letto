@@ -92,8 +92,49 @@ def show_cleaned_events():
 
     return event_names # List
 
-def process_data(numbers):
-    print("Here")
+def cleaned_emails_from_each_event(event_names): # Only pull out cleaned data, combine them and remove duplicates
+    print("\n")
+    db = client["Letto"]
+    collection = db["Past-Cleaned"]
+
+    total_mails = []
+
+    data = collection.find({}, {"_id": 0})
+
+    try:
+        for data in collection.find({}, {"_id": 0}):
+            for event in event_names:
+                if event in data:
+                    mails = data[event]["cleaned_mails"]
+                    total_mails.extend(mails)
+    except Exception as e:
+        print(f"Error: {e}")
+
+    print(f"Total Mails: {len(total_mails)}")
+
+    total_mails = unique_mails(total_mails)
+    print(f"Total Mails (Removed Dups): {len(total_mails)}")
+
+    return total_mails # This is a List
+
+def process_data(numbers, total_events):
+
+    rdy_to_process = [] # 1 2 3 4 5
+    if "*" in numbers:
+        for i in range(total_events):
+            rdy_to_process.extend(i)
+    else:
+        rdy_to_process = numbers
+
+    # Index to event name
+    events_to_process = [] # Sample: ["Event-0", "Event-2", "Event-3", "Event-5"]
+    
+    for i in rdy_to_process:
+        events_to_process.append(total_events[i])
+
+    final_data = cleaned_emails_from_each_event(events_to_process)
+    print("Finished")
+
     pass
 
 def current_data(): # Only cleaned data
@@ -131,7 +172,7 @@ def current_data(): # Only cleaned data
                     print(f"Only {len(total_events) - 1} exists.")
                     continue
 
-                process_data(numbers)
+                process_data(numbers, total_events)
                 break
 
         except Exception as e:
