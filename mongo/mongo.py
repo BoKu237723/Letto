@@ -133,11 +133,30 @@ def process_data(numbers, total_events):
         events_to_process.append(total_events[i])
 
     final_data = cleaned_emails_from_each_event(events_to_process)
-    print("Finished")
 
-    pass
+    # Current Problem: The format we want is 
+    # This won't work because there are dups
 
-def current_data(): # Only cleaned data
+    db = client["Letto"]
+    collection = db["Processed-Chunks"]
+
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    unique_name = input("[+] Enter Unique Name: ")
+    description = input("[+] Enter Description: ")
+
+    data = {
+        "Name": unique_name,
+        "Description": description,
+        "Processed Events": total_events,
+        "Created Date": time,
+        "Mails": final_data
+    }
+
+    collection.insert_one(data)
+    print("Data Inserted Successfully to Processed Chunks.")
+
+def create_data_chunk(): # Only cleaned data
 
     def help_fun(): # Maybe add more in the future?
         print("\n[+] These are Sample Formats\n[+] Index starts at 0\n[+] (All Events except 8 and 10) 0-7 9 11-12\n[+] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
@@ -178,9 +197,51 @@ def current_data(): # Only cleaned data
         except Exception as e:
             print(f"Input Error: {e}")
 
+    print("")
+
+def show_all_data_chunks():
+    db = client["Letto"]
+    collection = db["Processed-Chunks"]
+    projection = { "Name": 1, "Description": 1, "_id": 0 }
+
+    cursor = collection.find({}, projection)
+    index = 0
+    try:
+        for doc in cursor:
+            print(f"{index}: {doc["Name"]} : {doc["Description"]}")
+            index += 1
+    except Exception as e:
+        print(f"Error: {e}")
+
+def file_output():
+    db = client["Letto"]
+    collection = db["Processed-Chunks"]
+    cursor = collection.find()
+    selected_chunk = int(input("Enter ID of chunk to process: "))
+    file_name = input("Enter file name: ")
+    amount = int(input("How many mails per line?: "))
+
+    for index, doc in enumerate(cursor):
+        if index == selected_chunk:
+            total_lines = 0
+
+            with open (file_name, "w", encoding="utf-8") as f:
+                for i in range(0, len(doc["Mails"]), amount):
+                    chunk = doc["Mails"][i:i+amount]
+                    
+                    line = ' '.join(chunk)
+                    f.write(line + '\n')
+                    total_lines += 1
+
+            print(f"Exported {total_lines} line/s in {file_name}.")
+            break
+
+    print("Chunk ID not found!")
+    
 def main():
     print("1. Process new event data \n2. Show current Events' data from Database")
-    print("3. Show Specific Event Data\n4. Process data to current Pipeline")
+    print("3. Show Specific Event Data \n4. Show all data chunks \n5. Make new data chunk\n6. File Output")
+
     while True:
         try:
             user_input = int(input("Your Input: "))
@@ -190,9 +251,16 @@ def main():
                 pass
             elif user_input == 3: # TODO
                 pass
-            elif user_input == 4: # TODO
-                current_data()
-                break
+            elif user_input == 4:
+                show_all_data_chunks()
+                continue
+            elif user_input == 5:
+                create_data_chunk()
+                continue
+            elif user_input == 6: # TODO
+                show_all_data_chunks()
+                file_output()
+                continue
             else:
                 print("Invalid input.")
                 continue
