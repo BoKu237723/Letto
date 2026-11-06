@@ -85,7 +85,7 @@ def show_cleaned_events():
     for event in events:
         event_names.extend(event.keys())
 
-    print("[+] Total Events in Database\n")
+    print("\n[+] Total Events in Database\n")
 
     for event in event_names:
         print(f"[{event_names.index(event)}] {event}")
@@ -237,9 +237,74 @@ def file_output():
             break
 
     print("Chunk ID not found!")
-    
+
+def process_range():
+    db = client["Letto"]
+    collection = db["Past-Cleaned"]
+
+    def help_fun(): # Maybe add more in the future?
+        print("\n[+] These are Sample Formats\n[+] Index starts at 0\n[+] (All Events except 8 and 10) 0-7 9 11-12\n[+] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
+
+    total_events = show_cleaned_events() # Returns List
+
+    while True:
+        try:
+            user_range = input("\n[=] Select Your Range (? for help): ").strip() # String
+            numbers = []
+
+            if user_range == "?":
+                help_fun()
+                continue
+
+            elif user_range == "*":
+                numbers.extend("*")
+                pass # TODO: Process All
+                break
+
+            else:
+                for i in user_range.split(" "):
+                    if "-" in i:
+                        start, end = map(int, i.split("-"))
+                        numbers.extend(range(start, end + 1))
+                    else:
+                        numbers.append(int(i))
+
+                    greater_check = any(x > (len(total_events)-1) for x in numbers)
+
+                if greater_check == True:
+                    print(f"Only {len(total_events) - 1} exists.")
+                    continue
+                break
+
+        except Exception as e:
+            print(f"Input Error: {e}")
+
+    return numbers
+
+def show_event_data(numbers):
+    db = client["Letto"]
+    collection = db["Past-Cleaned"]
+    cursor = collection.find({})
+    docs = list(cursor)
+
+    for i in numbers:
+        doc = docs[i]
+        event_name, event_data = next(
+            (key, value) for key, value in doc.items() if key != "_id"
+        )
+
+        created_time = event_data["time"]
+        invalid_mails = event_data["invalid_mails"]
+        cleaned_mails = len(event_data["cleaned_mails"])
+
+        print(f"\n")
+        print(f"Event Name: {event_name}")
+        print(f"Created Time: {created_time}")
+        print(f"Invalid Mails: {invalid_mails}")
+        print(f"Cleaned Mails: {cleaned_mails}")
+
 def main():
-    print("1. Process new event data \n2. Show current Events' data from Database")
+    print("1. Process new event data \n2. Show current all available Events")
     print("3. Show Specific Event Data \n4. Show all data chunks \n5. Make new data chunk\n6. File Output")
 
     while True:
@@ -247,17 +312,21 @@ def main():
             user_input = int(input("Your Input: "))
             if user_input == 1:
                 file_processing()
-            elif user_input == 2: # TODO
-                pass
-            elif user_input == 3: # TODO
-                pass
+                continue
+            elif user_input == 2:
+                show_cleaned_events()
+                continue
+            elif user_input == 3:
+                numbers = process_range()
+                show_event_data(numbers)
+                continue
             elif user_input == 4:
                 show_all_data_chunks()
                 continue
             elif user_input == 5:
                 create_data_chunk()
                 continue
-            elif user_input == 6: # TODO
+            elif user_input == 6:
                 show_all_data_chunks()
                 file_output()
                 continue
