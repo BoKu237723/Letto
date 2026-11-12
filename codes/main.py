@@ -3,20 +3,20 @@ import personalized
 
 def show_options():
     print("\n$$ =========================== MENU =========================== $$\n")
-    print("1. Add new event")
-    print("2. Display all events in database")
-    print("3. Display specific event(s) data in detail")
-    print("4. Display all data chunks")
-    print("5. Make new data chunk")
-    print("6. Make file output")
-    print("7. Send Personalized Certs")
-    print("8. Exist")
+    print("(1) Add new event")
+    print("(2) Display all events in database")
+    print("(3) Display specific event(s) data in detail")
+    print("(4) Display all data chunks")
+    print("(5) Make new data chunk")
+    print("(6) Make file output")
+    print("(7) Send Personalized Certs")
+    print("(8) Exist")
 
 def main():
     while True:
         try:
             show_options()
-            user_input = int(input(":: Choose Your Option: "))
+            user_input = int(input("\n(:) Choose Your Option: "))
 
             if user_input == 1:
                 functions.add_new_event()
@@ -50,14 +50,14 @@ def main():
                 break
 
             else:
-                print("Invalid Input.")
+                print("[!] Invalid Input.")
 
         except ValueError:
-            print("!! Enter only integers.")
+            print("[!] Enter only integers.")
             continue
 
         except KeyboardInterrupt:
-            print("\n!! Keyboard Interruption Detected.")
+            print("\n[!] Keyboard Interruption Detected.")
             break
 
 if __name__ == "__main__":

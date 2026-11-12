@@ -13,8 +13,8 @@ load_dotenv()
 
 def personalized_mails():
     print("")
-    print("## Make sure to enter certificates in the 'personalized/certificates' folder inside")
-    print("## Make sure to fill up and match data in personalized/emails.json")
+    print("[#] Make sure to enter certificates in the 'personalized/certificates' folder inside")
+    print("[#] Make sure to fill up and match data in personalized/emails.json")
 
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
@@ -42,10 +42,10 @@ Best regards,
         with open(EMAILS_JSON, 'r') as f:
             email_data = json.load(f)
     except FileNotFoundError:
-        print(f"!! Error: {EMAILS_JSON} file not found!")
+        print(f"[!] Error: {EMAILS_JSON} file not found!")
         return
     except json.JSONDecodeError:
-        print(f"!! Error: {EMAILS_JSON} contains invalid JSON!")
+        print(f"[!] Error: {EMAILS_JSON} contains invalid JSON!")
         return
 
     # MAIL SMTP SERVER CONNECTION
@@ -53,9 +53,9 @@ Best regards,
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(YOUR_EMAIL, YOUR_APP_PASS)
-        print("## Successfully connected to Gmail SMTP server")
+        print("[$] Successfully connected to Gmail SMTP server")
     except Exception as e:
-        print(f"## Failed to connect to Gmail: {e}\n")
+        print(f"[$] Failed to connect to Gmail: {e}\n")
         return
 
     successful_emails = 0
@@ -66,14 +66,14 @@ Best regards,
         file_name = entry.get('file')
 
         if not recipient_email or not file_name:
-            print(f"!! Skipping Invalid Entry: {entry} ")
+            print(f"[!] Skipping Invalid Entry: {entry} ")
             failed_emails += 1
             continue
 
         file_path = os.path.join(CERTIFICATES_FOLDER, file_name)
 
         if not os.path.exists(file_path):
-            print(f"!! Certificate Path not found: {file_path}")
+            print(f"[!] Certificate Path not found: {file_path}")
             failed_emails += 1
             continue
 
@@ -100,16 +100,16 @@ Best regards,
 
             # Send
             server.send_message(msg)
-            print(f"$$ Sent certificate to: {recipient_email} ({file_name})")
+            print(f"[$] Sent certificate to: {recipient_email} ({file_name})")
             successful_emails += 1
 
         except Exception as e:
-            print(f"!! Failed to send to {recipient_email}.")
+            print(f"[!] Failed to send to {recipient_email}.")
             failed_emails += 1
 
     server.quit()
 
     print("")
-    print(f"$$Successful sent emails: {successful_emails}")
-    print(f"$$ Failed to send emails : {failed_emails}")
-    print(f"$$ Total processed emails: {successful_emails + failed_emails}\n")
+    print(f"[$] Successful sent emails: {successful_emails}")
+    print(f"[$] Failed to send emails : {failed_emails}")
+    print(f"[$] Total processed emails: {successful_emails + failed_emails}\n")

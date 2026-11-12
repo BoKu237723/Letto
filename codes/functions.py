@@ -88,12 +88,12 @@ def clean_mails(raw_mails): # Return Valid & Invalid & Unique & Duplicate & Fina
     # Duplicate Mails are integers, not list.
     # Unique Mails are the final mails
 
-    print(f"$$ Processed Raw Mails: {len(raw_mails)}")
-    print(f"$$ Valid Mails: {len(valid_mails)}")
-    print(f"$$ Invalid Mails: {len(invalid_mails)}")
-    print(f"$$ Unique Mails: {len(unique_mails)}")
-    print(f"$$ Duplicate Mails: {len(duplicates_mails)}")
-    print(f"$$ Final Cleaned Mails: {len(unique_mails)}")
+    print(f"[$] Processed Raw Mails: {len(raw_mails)}")
+    print(f"[$] Valid Mails: {len(valid_mails)}")
+    print(f"[$] Invalid Mails: {len(invalid_mails)}")
+    print(f"[$] Unique Mails: {len(unique_mails)}")
+    print(f"[$] Duplicate Mails: {len(duplicates_mails)}")
+    print(f"[$] Final Cleaned Mails: {len(unique_mails)}")
 
     return valid_mails, invalid_mails, unique_mails, duplicates_mails, unique_mails
 
@@ -110,7 +110,7 @@ def save_to_past_raw(event_name, mails):
 
     collection.insert_one(data)
     print("")
-    print("$$ Raw data inserted successfully to (Past-Raw) collection")
+    print("[$] Raw data inserted successfully to (Past-Raw) collection")
 
 def save_to_past_cleaned(event_name, raw_mails):
     collection = mongo_collection("Past-Cleaned")
@@ -130,14 +130,14 @@ def save_to_past_cleaned(event_name, raw_mails):
 
     try:
         collection.insert_one(data)
-        print("$$ Clean data inserted successfully to (Past-Cleaned) collection")
+        print("[$] Clean data inserted successfully to (Past-Cleaned) collection")
     except Exception as e:
         print(f"Error: {e}")
 
 def add_new_event():
-    v_event_name = input("\nEnter your event name: ")
-    v_file_name = input("Enter file (.xlsx) name to process: ")
-    v_column = int(input("Enter column index for mails (0 for first column): "))
+    v_event_name = input("\n(:) Enter your event name: ")
+    v_file_name = input("(:) Enter file (.xlsx) name to process: ")
+    v_column = int(input("(:) Enter column index for mails (0 for first column): "))
 
     try:
         v_read_data = pd.read_excel(v_file_name)
@@ -195,13 +195,13 @@ def display_events_detail():
         final_mails      =   event_data["final_mails"]
 
         print("")
-        print(f">>>> {event_name} <<<<")
-        print(f"Created Time: {created_time}")
-        print(f"Valid Mails: {len(valid_mails)}")
-        print(f"Invalid Mails: {len(invalid_mails)}")
-        print(f"Unique Mails: {len(unique_mails)}")
-        print(f"Duplicate Mails: {len(duplicate_mails)}")
-        print(f"Ready to Use Mails: {len(final_mails)}")
+        print(f">>>>> {event_name} <<<<<")
+        print(f"[$] Created Time: {created_time}")
+        print(f"[$] Valid Mails: {len(valid_mails)}")
+        print(f"[$] Invalid Mails: {len(invalid_mails)}")
+        print(f"[$] Unique Mails: {len(unique_mails)}")
+        print(f"[$] Duplicate Mails: {len(duplicate_mails)}")
+        print(f"[$] Ready to Use Mails: {len(final_mails)}")
 
 # ========================================================================================================
 
@@ -223,15 +223,15 @@ def return_all_event_names():
 
 def range_help():
     print("")
-    print("## These are Sample Formats")
-    print("## (All Events except 8 and 10) 0-7 9 11-12")
-    print("## (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
+    print("[#] These are Sample Formats")
+    print("[#] (All Events except 8 and 10) 0-7 9 11-12")
+    print("[#] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
 
 def data_range(): # Example: 0-4 6 8-9 11 # Output a list of index of chosen events
     total_events = pullout_event_names()
     while True:
         numbers = []
-        user_range = input("\nSelect Your Range (? for help): ").strip() # String
+        user_range = input("\n(:) Select Your Range (? for help): ").strip() # String
 
         if user_range == "?":
             range_help()
@@ -280,7 +280,7 @@ def create_chunk_mails(event_list):
                     total_mails.extend(mails)
 
         final_mails, duplicates  = f_unique_mails(total_mails)
-        print(f"Removed {len(duplicates)} duplicate mails.")
+        print(f"[$] Removed {len(duplicates)} duplicate mails.")
 
         return final_mails, duplicates
 
@@ -299,8 +299,8 @@ def create_chunk():
 
     final_data, duplicates = create_chunk_mails(events_to_process)
 
-    unique_name = input("Enter unique name for this chunk: ") # TODO: Need validation
-    description = input("Enter a description for this chunk: ")
+    unique_name = input("(:) Enter unique name for this chunk: ") # TODO: Need validation
+    description = input("(:) Enter a description for this chunk: ")
     time = get_current_time()
 
     data = {
@@ -324,13 +324,12 @@ def show_chunks():
     cursor = collection.find({})
     for index, doc in enumerate(cursor):
         print("")
-        print(f"Index: {index}")
-        print(f">>>>>> {doc["Unique Name"]} <<<<<<")
-        print(f"Description: {doc["Description"]}")
-        print(f"Created Data: {doc["Created Date"]}")
-        print(f"Included Events: {doc["Included Events"]}")
-        print(f"Cleaned Mails: {len(doc["Cleaned Mails"])}")
-        print(f"Removed Duplicates: {len(doc["Duplicate Mails"])}")
+        print(f"[{index}] >>>>>> {doc["Unique Name"]} <<<<<<")
+        print(f"[$] Description: {doc["Description"]}")
+        print(f"[$] Created Data: {doc["Created Date"]}")
+        print(f"[$] Included Events: {doc["Included Events"]}")
+        print(f"[$] Cleaned Mails: {len(doc["Cleaned Mails"])}")
+        print(f"[$] Removed Duplicates: {len(doc["Duplicate Mails"])}")
 
     pass
 
@@ -342,9 +341,9 @@ def file_output():
     show_chunks()
     collection = mongo_collection("Processed-Chunks")
     cursor = collection.find()
-    selected_chunk = int(input("\nEnter Index of chunk to process: "))
-    file_name= input("Enter file name: ")
-    amount = int(input("How many mails per line?: "))
+    selected_chunk = int(input("\n(:) Enter Index of chunk to process: "))
+    file_name= input("(:) Enter file name: ")
+    amount = int(input("(:) How many mails per line?: "))
 
     for index, doc in enumerate(cursor):
         if index == selected_chunk:
@@ -358,11 +357,11 @@ def file_output():
                     f.write(line + '\n')
                     total_lines += 1
 
-            print(f"Exported {total_lines} line(s) in {file_name}.")
+            print(f"[$] Exported {total_lines} line(s) in {file_name}.")
             break
 
     else:
-        print("Chunk ID not found!")
+        print("[!] Chunk ID not found!")
 
 # ========================================================================================================
 
