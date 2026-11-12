@@ -1,24 +1,34 @@
 import functions
 import personalized
+from colorama import Fore, Style 
+
+def colored(text, color):
+    return f"{color}{text}{Style.RESET_ALL}"
 
 def show_options():
-    print("\n$$ =========================== MENU =========================== $$\n")
-    print("(1) Add new event")
-    print("(2) Display all events in database")
-    print("(3) Display specific event(s) data in detail")
-    print("(4) Display all data chunks")
-    print("(5) Make new data chunk")
-    print("(6) Make file output")
-    print("(7) Send Personalized Certs")
-    print("(8) Exist")
+    print("")
+    print(colored("$$ =========================== MENU =========================== $$\n", Fore.CYAN + Style.BRIGHT))
+    print(colored("(1) Add new event", Fore.BLUE))
+    print(colored("(2) Display all events in database", Fore.BLUE))
+    print(colored("(3) Display specific event(s) data in detail", Fore.BLUE))
+    print(colored("(4) Display all data chunks", Fore.BLUE))
+    print(colored("(5) Make new data chunk", Fore.BLUE))
+    print(colored("(6) Make file output", Fore.BLUE))
+    print(colored("(7) Send Personalized Certs", Fore.BLUE))
+    print(colored("(8) Exit", Fore.BLUE))
+    print("")
 
 def main():
+    show_options()
     while True:
         try:
-            show_options()
-            user_input = int(input("\n(:) Choose Your Option: "))
+            user_input = int(input("(:) Choose Your Option: "))
 
-            if user_input == 1:
+            if user_input == 0:
+                show_options()
+                continue
+            
+            elif user_input == 1:
                 functions.add_new_event()
                 continue
 
@@ -48,16 +58,16 @@ def main():
 
             elif user_input == 8:
                 break
-
             else:
-                print("[!] Invalid Input.")
+                print(colored("[!] Invalid Input.", Fore.YELLOW))
 
         except ValueError:
-            print("[!] Enter only integers.")
+            print(colored("[!] Enter only integers.", Fore.YELLOW))
             continue
 
         except KeyboardInterrupt:
-            print("\n[!] Keyboard Interruption Detected.")
+            print("")
+            print(colored("[!] Keyboard Interruption Detected.", Fore.YELLOW))
             break
 
 if __name__ == "__main__":

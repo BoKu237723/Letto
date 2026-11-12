@@ -4,9 +4,22 @@ import pandas as pd
 import os
 import re
 from collections import Counter
+from colorama import Fore, Style
 
 from dotenv import load_dotenv
 load_dotenv()
+
+# ========================================================================================================
+
+""" Support Functions """
+
+def get_current_time():
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return time
+
+
+def colored(text, color):
+    return f"{color}{text}{Style.RESET_ALL}"
 
 # ========================================================================================================
 
@@ -17,21 +30,13 @@ client = MongoClient(uri)
 
 try:
     client.admin.command("ping")
-    print("\nConnected successfully")
+    print(colored("\n[$] Connected successfully", Fore.GREEN))
 except Exception as e:
-    print(f"Error Occured: {e}")
+    print(colored(f"[!] Error Occured: {e}", Fore.RED))
 
 def mongo_collection(collection_name):
     db = client["Letto"]
     return db[collection_name]
-
-# ========================================================================================================
-
-""" Support Functions """
-
-def get_current_time():
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return time
 
 # ========================================================================================================
 
@@ -88,12 +93,12 @@ def clean_mails(raw_mails): # Return Valid & Invalid & Unique & Duplicate & Fina
     # Duplicate Mails are integers, not list.
     # Unique Mails are the final mails
 
-    print(f"[$] Processed Raw Mails: {len(raw_mails)}")
-    print(f"[$] Valid Mails: {len(valid_mails)}")
-    print(f"[$] Invalid Mails: {len(invalid_mails)}")
-    print(f"[$] Unique Mails: {len(unique_mails)}")
-    print(f"[$] Duplicate Mails: {len(duplicates_mails)}")
-    print(f"[$] Final Cleaned Mails: {len(unique_mails)}")
+    print(colored("[$] Processed Raw Mails:", Fore.GREEN) + f" {len(raw_mails)}")
+    print(colored("[$] Valid Mails:", Fore.GREEN) + f" {len(valid_mails)}")
+    print(colored("[$] Invalid Mails:", Fore.GREEN) + f" {len(invalid_mails)}")
+    print(colored("[$] Unique Mails:", Fore.GREEN) + f" {len(unique_mails)}")
+    print(colored("[$] Duplicate Mails:", Fore.GREEN) + f" {len(duplicates_mails)}")
+    print(colored("[$] Final Cleaned Mails:", Fore.GREEN) + f" {len(unique_mails)}")
 
     return valid_mails, invalid_mails, unique_mails, duplicates_mails, unique_mails
 
@@ -110,7 +115,7 @@ def save_to_past_raw(event_name, mails):
 
     collection.insert_one(data)
     print("")
-    print("[$] Raw data inserted successfully to (Past-Raw) collection")
+    print(colored("[$] Raw data inserted successfully to (Past-Raw) collection", Fore.GREEN))
 
 def save_to_past_cleaned(event_name, raw_mails):
     collection = mongo_collection("Past-Cleaned")
@@ -130,14 +135,14 @@ def save_to_past_cleaned(event_name, raw_mails):
 
     try:
         collection.insert_one(data)
-        print("[$] Clean data inserted successfully to (Past-Cleaned) collection")
+        print(colored("[$] Clean data inserted successfully to (Past-Cleaned) collection", Fore.GREEN))
     except Exception as e:
-        print(f"Error: {e}")
+        print(colored(f"Error: {e}", Fore.RED))
 
 def add_new_event():
-    v_event_name = input("\n(:) Enter your event name: ")
-    v_file_name = input("(:) Enter file (.xlsx) name to process: ")
-    v_column = int(input("(:) Enter column index for mails (0 for first column): "))
+    v_event_name = input(colored("\n(:) Enter your event name: ", Fore.MAGENTA))
+    v_file_name = input(colored("(:) Enter file (.xlsx) name to process: ", Fore.MAGENTA))
+    v_column = int(input(colored("(:) Enter column index for mails (0 for first column): ", Fore.MAGENTA)))
 
     try:
         v_read_data = pd.read_excel(v_file_name)
@@ -145,7 +150,7 @@ def add_new_event():
         save_to_past_raw(v_event_name, v_extracted_mails)
         save_to_past_cleaned(v_event_name, v_extracted_mails)
     except Exception as e:
-        print(f"Error Occured: {e}")
+        print(colored(f"[!] Error Occured: {e}", Fore.RED))
 
 
 # ========================================================================================================
@@ -164,10 +169,10 @@ def pullout_event_names():
     for event in events:
         event_names.extend(event.keys())
 
-    print("\n$$ ================== All Events In Database ================== $$\n")
+    print(colored("\n$$ ================== All Events In Database ================== $$\n", Fore.CYAN + Style.BRIGHT))
 
     for event in event_names:
-        print(f"[{event_names.index(event)}] {event}")
+        print(colored(f"[{event_names.index(event)}] {event}", Fore.BLUE + Style.DIM))
 
     return event_names # List ["Event-1", "Event-2", "Evet-3"]
 
@@ -179,7 +184,7 @@ def display_events_detail():
     
     input_range = data_range() # List
 
-    print("\n$$ ============= Displaying Event Data in Detail ============== $$")
+    print(colored("\n$$ ============= Displaying Event Data in Detail ============== $$\n", Fore.CYAN + Style.BRIGHT))
 
     for i in input_range:
         doc = docs[i]
@@ -194,14 +199,14 @@ def display_events_detail():
         duplicate_mails  =   event_data["duplicate_mails"]
         final_mails      =   event_data["final_mails"]
 
+        print(colored(f">>>>> {event_name} <<<<<", Fore.CYAN))
+        print(colored("[$] Created Time:", Fore.BLUE) + f" {created_time}")
+        print(colored("[$] Valid Mails:", Fore.BLUE) + f" {len(valid_mails)}")
+        print(colored("[$] Invalid Mails:", Fore.BLUE) + f" {len(invalid_mails)}")
+        print(colored("[$] Unique Mails:", Fore.BLUE) + f" {len(unique_mails)}")
+        print(colored("[$] Duplicate Mails:", Fore.BLUE) + f" {len(duplicate_mails)}")
+        print(colored("[$] Ready to Use Mails:", Fore.BLUE) + f" {len(final_mails)}")
         print("")
-        print(f">>>>> {event_name} <<<<<")
-        print(f"[$] Created Time: {created_time}")
-        print(f"[$] Valid Mails: {len(valid_mails)}")
-        print(f"[$] Invalid Mails: {len(invalid_mails)}")
-        print(f"[$] Unique Mails: {len(unique_mails)}")
-        print(f"[$] Duplicate Mails: {len(duplicate_mails)}")
-        print(f"[$] Ready to Use Mails: {len(final_mails)}")
 
 # ========================================================================================================
 
@@ -223,9 +228,9 @@ def return_all_event_names():
 
 def range_help():
     print("")
-    print("[#] These are Sample Formats")
-    print("[#] (All Events except 8 and 10) 0-7 9 11-12")
-    print("[#] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
+    print(colored("[#] These are Sample Formats", Fore.CYAN + Style.DIM))
+    print(colored("[#] (All Events except 8 and 10) 0-7 9 11-12", Fore.CYAN + Style.DIM))
+    print(colored("[#] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12", Fore.CYAN + Style.DIM))
 
 def data_range(): # Example: 0-4 6 8-9 11 # Output a list of index of chosen events
     total_events = pullout_event_names()
@@ -280,7 +285,7 @@ def create_chunk_mails(event_list):
                     total_mails.extend(mails)
 
         final_mails, duplicates  = f_unique_mails(total_mails)
-        print(f"[$] Removed {len(duplicates)} duplicate mails.")
+        print(colored(f"[$] Removed {len(duplicates)} duplicate mails.", Fore.GREEN))
 
         return final_mails, duplicates
 
@@ -299,8 +304,8 @@ def create_chunk():
 
     final_data, duplicates = create_chunk_mails(events_to_process)
 
-    unique_name = input("(:) Enter unique name for this chunk: ") # TODO: Need validation
-    description = input("(:) Enter a description for this chunk: ")
+    unique_name = input(colored("(:) Enter unique name for this chunk: ", Fore.MAGENTA)) # TODO: Need validation
+    description = input(colored("(:) Enter a description for this chunk: ", Fore.MAGENTA))
     time = get_current_time()
 
     data = {
@@ -314,22 +319,22 @@ def create_chunk():
 
     collection.insert_one(data)
     print("")
-    print(f"$$ Data Chunk '{unique_name}' created with {len(final_data)} cleaned mails from {len(events_to_process)} events.")
+    print(colored(f"[$] Data Chunk '{unique_name}' created with {len(final_data)} cleaned mails from {len(events_to_process)} events.", Fore.GREEN))
 
 def show_chunks():
 
-    print("\n$$ ============= All Available Chunks in Database ============= $$")
+    print(colored("\n$$ ============= All Available Chunks in Database ============= $$\n", Fore.CYAN + Style.BRIGHT))
     
     collection = mongo_collection("Processed-Chunks")
     cursor = collection.find({})
     for index, doc in enumerate(cursor):
+        print(colored(f"[{index}] Unique Name:", Fore.CYAN + Style.DIM) + f" {doc['Unique Name']}")
+        print(colored("[$] Description:", Fore.CYAN + Style.DIM) + f" {doc['Description']}")
+        print(colored("[$] Created Time:", Fore.CYAN + Style.DIM) + f" {doc['Created Date']}")
+        print(colored("[$] Included Events:", Fore.CYAN + Style.DIM) + f" {doc['Included Events']}")
+        print(colored("[$] Cleaned Mails:", Fore.CYAN + Style.DIM) + f" {len(doc['Cleaned Mails'])}")
+        print(colored("[$] Removed Duplicates:", Fore.CYAN + Style.DIM) + f" {len(doc['Duplicate Mails'])}")
         print("")
-        print(f"[{index}] >>>>>> {doc["Unique Name"]} <<<<<<")
-        print(f"[$] Description: {doc["Description"]}")
-        print(f"[$] Created Data: {doc["Created Date"]}")
-        print(f"[$] Included Events: {doc["Included Events"]}")
-        print(f"[$] Cleaned Mails: {len(doc["Cleaned Mails"])}")
-        print(f"[$] Removed Duplicates: {len(doc["Duplicate Mails"])}")
 
     pass
 
@@ -341,9 +346,9 @@ def file_output():
     show_chunks()
     collection = mongo_collection("Processed-Chunks")
     cursor = collection.find()
-    selected_chunk = int(input("\n(:) Enter Index of chunk to process: "))
-    file_name= input("(:) Enter file name: ")
-    amount = int(input("(:) How many mails per line?: "))
+    selected_chunk = int(input(colored("(:) Enter Index of chunk to process: ", Fore.MAGENTA)))
+    file_name= input(colored("(:) Enter file name: ", Fore.MAGENTA))
+    amount = int(input(colored("(:) How many mails per line?: ", Fore.MAGENTA)))
 
     for index, doc in enumerate(cursor):
         if index == selected_chunk:
@@ -357,11 +362,12 @@ def file_output():
                     f.write(line + '\n')
                     total_lines += 1
 
-            print(f"[$] Exported {total_lines} line(s) in {file_name}.")
+            print(colored(f"[$] Exported {total_lines} line(s) in {file_name}.", Fore.GREEN))
+            print("")
             break
 
     else:
-        print("[!] Chunk ID not found!")
+        print(colored("[!] Chunk ID not found!", Fore.YELLOW))
 
 # ========================================================================================================
 
