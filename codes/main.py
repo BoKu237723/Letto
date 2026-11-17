@@ -1,63 +1,39 @@
 import functions
 import personalized
+import questionary
+from colorama import Fore, Style 
 
-def show_options():
-    print("\n$$ =========================== MENU =========================== $$\n")
-    print("(1) Add new event")
-    print("(2) Display all events in database")
-    print("(3) Display specific event(s) data in detail")
-    print("(4) Display all data chunks")
-    print("(5) Make new data chunk")
-    print("(6) Make file output")
-    print("(7) Send Personalized Certs")
-    print("(8) Exist")
+def colored(text, color):
+    return f"{color}{text}{Style.RESET_ALL}"
 
 def main():
+    print("")
     while True:
-        try:
-            show_options()
-            user_input = int(input("\n(:) Choose Your Option: "))
+        print(colored("$$ =========================== MENU =========================== $$\n", Fore.BLUE + Style.BRIGHT))
+        choice = questionary.select(
+            "What do you want to do?",
+            choices=["(1) Add new event", "(2) Display specific event(s) data in detail", "(3) Display all data chunks", "(4) Make new data chunk", "(5) Make file output", "(6) Send Personalized Certs", "(7) Exit"],
+        ).ask()
 
-            if user_input == 1:
-                functions.add_new_event()
-                continue
-
-            elif user_input == 2:
-                functions.pullout_event_names()
-                continue
-
-            elif user_input == 3:
-                functions.display_events_detail()
-                continue
-
-            elif user_input == 4:
-                functions.show_chunks()
-                continue
-
-            elif user_input == 5:
-                functions.create_chunk()
-                continue
-
-            elif user_input == 6:
-                functions.file_output()
-                continue
-
-            elif user_input == 7:
-                personalized.personalized_mails()
-                continue
-
-            elif user_input == 8:
-                break
-
-            else:
-                print("[!] Invalid Input.")
-
-        except ValueError:
-            print("[!] Enter only integers.")
+        if choice == "(1) Add new event":
+            functions.add_new_event()
             continue
-
-        except KeyboardInterrupt:
-            print("\n[!] Keyboard Interruption Detected.")
+        elif choice == "(2) Display specific event(s) data in detail":
+            functions.display_events_detail()
+            continue
+        elif choice == "(3) Display all data chunks":
+            functions.show_chunks()
+            continue
+        elif choice == "(4) Make new data chunk":
+            functions.create_chunk()
+            continue
+        elif choice == "(5) Make file output":
+            functions.file_output()
+            continue
+        elif choice == "(6) Send Personalized Certs":
+            personalized.personalized_mails()
+            continue
+        elif choice == "(7) Exit":
             break
 
 if __name__ == "__main__":
