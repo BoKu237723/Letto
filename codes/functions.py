@@ -30,7 +30,7 @@ client = MongoClient(uri)
 
 try:
     client.admin.command("ping")
-    print("\nConnected successfully")
+    print(colored("\n[+] Connected successfully", Fore.GREEN))
 except Exception as e:
     print(f"Error Occured: {e}")
 
@@ -93,12 +93,14 @@ def clean_mails(raw_mails): # Return Valid & Invalid & Unique & Duplicate & Fina
     # Duplicate Mails are integers, not list.
     # Unique Mails are the final mails
 
+    print("")
     print(f"[$] Processed Raw Mails: {Fore.YELLOW + Style.BRIGHT}{len(raw_mails)}{Style.RESET_ALL}")
     print(f"[$] Valid Mails: {Fore.YELLOW + Style.BRIGHT}{len(valid_mails)}{Style.RESET_ALL}")
     print(f"[$] Invalid Mails: {Fore.YELLOW + Style.BRIGHT}{len(invalid_mails)}{Style.RESET_ALL}")
     print(f"[$] Unique Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
     print(f"[$] Duplicate Mails: {Fore.YELLOW + Style.BRIGHT}{len(duplicates_mails)}{Style.RESET_ALL}")
     print(f"[$] Final Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
+    print("")
 
     return valid_mails, invalid_mails, unique_mails, duplicates_mails, unique_mails
 
@@ -133,8 +135,8 @@ def save_to_past_cleaned(event_name, raw_mails):
 
     try:
         collection.insert_one(data)
-        print(f"[$] {Fore.GREEN + Style.BRIGHT}Raw data inserted successfully to (Past-Raw) collection {Style.RESET_ALL}")
-        print(f"[$] {Fore.GREEN + Style.BRIGHT}Clean data inserted successfully to (Past-Cleaned) collection {Style.RESET_ALL}")
+        print(f"[$] {Fore.GREEN}Raw data inserted successfully to (Past-Raw) collection {Style.RESET_ALL}")
+        print(f"[$] {Fore.GREEN}Clean data inserted successfully to (Past-Cleaned) collection {Style.RESET_ALL}")
         print("")
     except Exception as e:
         print(f"Error: {e}")
@@ -215,7 +217,7 @@ def display_events_detail():
 
 # ========================================================================================================
 
-# Return all event names | No Display
+# Return event names | No Display
 
 def return_all_event_names():
     collection = mongo_collection("Past-Cleaned")
@@ -235,50 +237,6 @@ def pull_data():
         "Select toppings", event_names
     ).ask()
     return selected_events
-
-# ========================================================================================================
-
-""" Data Range """
-
-def range_help():
-    print("")
-    print("[#] These are Sample Formats")
-    print("[#] (All Events except 8 and 10) 0-7 9 11-12")
-    print("[#] (All Events) * || 0-12 || 0 1 2 3 4 5 6 7 8 9 10 11 12")
-
-# def data_range(): # Example: 0-4 6 8-9 11 # Output a list of index of chosen events
-#     total_events = pullout_event_names()
-#     while True:
-#         numbers = []
-#         user_range = input("\n(:) Select Your Range (? for help): ").strip() # String
-
-#         if user_range == "?":
-#             range_help()
-#             continue
-
-#         elif user_range == "*":
-#             index = 0
-#             for i in range(len(total_events)):
-#                 numbers.append(index)
-#                 index += 1
-#             break
-
-#         else:
-#             for i in user_range.split(" "):
-#                 if "-" in i:
-#                     start, end = map(int, i.split("-"))
-#                     numbers.extend(range(start, end+1))
-#                 else:
-#                     numbers.append(int(i))
-
-#                 greater_check = any(x > (len(total_events)) for x in numbers)
-
-#             if greater_check == True:
-#                 print(f"Only {len(total_events)} exists.")
-#                 continue
-#             break
-
-#     return numbers
 
 # ========================================================================================================
 
@@ -327,13 +285,15 @@ def create_chunk():
 
     collection.insert_one(data)
     print("")
-    print(f"[$] {Fore.GREEN + Style.BRIGHT}Successfully created the chunk and pushed to Atlas! {Style.RESET_ALL}")
     print(f"[$] Created Data Chunk Name: {Fore.YELLOW + Style.BRIGHT}{unique_name}{Style.RESET_ALL}")
     print(f"[$] Created Data Chunk Description: {Fore.YELLOW + Style.BRIGHT}{description}{Style.RESET_ALL}")
     print(f"[$] Created Time: {Fore.YELLOW + Style.BRIGHT}{time}{Style.RESET_ALL}")
     print(f"[$] Included Events: {Fore.YELLOW + Style.BRIGHT}{chosen_events}{Style.RESET_ALL}")
     print(f"[$] Duplicates Found: {Fore.YELLOW + Style.BRIGHT}{len(duplicates)}{Style.RESET_ALL}")
     print(f"[$] Cleaned Mails (Final): {Fore.YELLOW + Style.BRIGHT}{len(final_data)}{Style.RESET_ALL}")
+
+    print("")
+    print(f"[$] {Fore.GREEN}Successfully created the chunk and pushed to Atlas! {Style.RESET_ALL}")
     print("")
 
 def show_chunks():
@@ -407,7 +367,7 @@ def file_output():
                     total_lines += 1
             print("")
             print(
-                f"{Fore.GREEN + Style.BRIGHT}[$] Exported {total_lines} line(s) in {file_name}{Style.RESET_ALL}.\n"
+                f"{Fore.GREEN}[$] Exported {total_lines} line(s) in {file_name}{Style.RESET_ALL}.\n"
             )
             break
 

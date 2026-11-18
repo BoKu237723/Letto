@@ -12,10 +12,14 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+def colored(text, color):
+    return f"{color}{text}{Style.RESET_ALL}"
+
 def personalized_mails():
     print("")
-    print("[#] Make sure to enter certificates in the 'personalized/certificates' folder inside")
-    print("[#] Make sure to fill up and match data in personalized/emails.json")
+    print(colored("[#] Make sure to enter certificates in the 'personalized/certificates' folder inside", Fore.BLUE + Style.DIM))
+    print(colored("[#] Make sure to fill up and match data in personalized/emails.json", Fore.BLUE + Style.DIM))
+    print("")
 
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
@@ -54,9 +58,9 @@ Best regards,
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(YOUR_EMAIL, YOUR_APP_PASS)
-        print("[$] Successfully connected to Gmail SMTP server")
+        print(colored("[$] Successfully connected to Gmail SMTP server\n", Fore.GREEN))
     except Exception as e:
-        print(f"[$] Failed to connect to Gmail: {e}\n")
+        print(colored(f"[$] Failed to connect to Gmail: {e}\n", Fore.RED))
         return
 
     successful_emails = 0
@@ -101,16 +105,17 @@ Best regards,
 
             # Send
             server.send_message(msg)
-            print(f"[$] Sent certificate to: {recipient_email} ({file_name})")
+            print(f"[$] Sent certificate to: {Fore.BLUE + Style.DIM}{recipient_email} - ({file_name}){Style.RESET_ALL}")
             successful_emails += 1
 
         except Exception as e:
-            print(f"[!] Failed to send to {recipient_email}.")
+            print(f"[!] Failed to send to {Fore.RED + Style.DIM}{recipient_email}.{Style.RESET_ALL}")
             failed_emails += 1
 
     server.quit()
 
     print("")
-    print(f"[$] Successful sent emails: {successful_emails}")
-    print(f"[$] Failed to send emails : {failed_emails}")
-    print(f"[$] Total processed emails: {successful_emails + failed_emails}\n")
+    print((f"[$] Successful sent emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails}{Style.RESET_ALL}"))
+    print(f"[$] Failed to send emails : {Fore.YELLOW + Style.BRIGHT}{failed_emails}{Style.RESET_ALL}")
+    print(f"[$] Total processed emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails + failed_emails}\n{Style.RESET_ALL}")
+    print(colored("[$] Personalized Email Certificate sending process completed Successfully\n", Fore.GREEN))

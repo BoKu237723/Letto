@@ -12,7 +12,7 @@ def main():
         print(colored("$$ =========================== MENU =========================== $$\n", Fore.BLUE + Style.BRIGHT))
         choice = questionary.select(
             "What do you want to do?",
-            choices=["(1) Add new event", "(2) Display specific event(s) data in detail", "(3) Display all data chunks", "(4) Make new data chunk", "(5) Make file output", "(6) Send Personalized Certs", "(7) Exit"],
+            choices=["(1) Add new event", "(2) Display specific event(s) data in detail", "(3) Make new data chunk", "(4) Display specific data chunk(s) in detail", "(5) Make file output", "(6) Send Personalized Certs", "(7) Exit"],
         ).ask()
 
         if choice == "(1) Add new event":
@@ -21,11 +21,11 @@ def main():
         elif choice == "(2) Display specific event(s) data in detail":
             functions.display_events_detail()
             continue
-        elif choice == "(3) Display all data chunks":
-            functions.show_chunks()
-            continue
-        elif choice == "(4) Make new data chunk":
+        elif choice == "(3) Make new data chunk":
             functions.create_chunk()
+            continue
+        elif choice == "(4) Display specific data chunk(s) in detail":
+            functions.show_chunks()
             continue
         elif choice == "(5) Make file output":
             functions.file_output()
