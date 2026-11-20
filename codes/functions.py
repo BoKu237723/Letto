@@ -21,6 +21,20 @@ def get_current_time():
 def colored(text, color):
     return f"{color}{text}{Style.RESET_ALL}"
 
+def show_logo():
+    print ("""
+    [0;34m▄▄▄[0;34;47m▀▀▀[0;34m█[0;37m                [0;34m▄▄▄[0;34;47m▀▀▀[0;34m█[0;37m    [0;34m▄▄▄[0;34;47m▀▀▀[0;34m█[0;37m                 [0m
+    [0;37m [0;34m█[0;34;47m   [0;34m█[0;37m                  [0;34m█[0;34;47m   [0;34m█[0;37m      [0;34m█[0;34;47m   [0;34m█[0;37m                  [0m
+    [0;37m [0;34m█[0;34;47m ░ [0;34m█[0;37m    [0;34m▄[0;34;47m▀▀[0;37;44m█▀▀█[0;34;47m▀[0;37;44m▄[0;34m▄[0;37m    [0;34m█[0;34;47m ░ [0;34m█▄[0;37;44m▄[0;34m▄[0;37m   [0;34m█[0;34;47m ░ [0;34m█▄[0;37;44m▄[0;34m▄[0;37m    [0;30;44m▀[0;37;44m▄▄▄▄▄▄▄[0;30;44m▀[0;37m  [0m
+    [0;37m [0;34m█[0;34;47m░▒░[0;34m█[0;37m   [0;34m█[0;34;47m ░[0;37;44m▒[0;34m█[0;37m  [0;37;44m▒█▓█[0;35;44m░[0;37m   [0;34m█[0;34;47m░▒░[0;37;44m▀▓█▀[0;34m▀[0;37m  [0;34m█[0;34;47m░▒░[0;37;44m▀▓█▀[0;34m▀[0;37m  [0;34m█[0;37;44m█▓█[0;34m█▀█[0;37;44m█▓█[0;34m█[0;37m [0m
+    [0;37m [0;34m█[0;34;47m▒▓▒[0;34m█[0;37m  [0;34m█[0;34;47m▒░▒[0;37;44m░[0;37m   [0;37;44m░▓▀▀[0;34m▀[0;37m   [0;34m█[0;34;47m▒▓▒[0;34m██[0;37;44m░[0;34m█[0;37m   [0;34m█[0;34;47m▒▓▒[0;34m██[0;37;44m░[0;34m█[0;37m  [0;34m█[0;37;44m▓▒▓ [0;37m   [0;37;44m ▓▒▓[0;34m█[0m
+    [0;37m [0;34m█[0;34;47m▓█▓[0;35;44m░[0;37m  [0;34m█[0;34;47m▒▓▒[0;34m█▀■▀▀▀[0;37m      [0;34m█[0;34;47m▓█▓[0;35;44m░[0;34m▒▀[0;37m    [0;34m█[0;34;47m▓█▓[0;35;44m░[0;34m▒▀[0;37m   [0;34m█[0;37;44m▒░▒[0;34m▓[0;37m   [0;34m▓[0;37;44m▒░▒[0;34m█[0m
+    [0;37m [0;34m█[0;34;44m [0;94;44m░ [0;35;44m▒[0;37m  [0;34m█[0;34;47m▓█▓[0;35;44m░[0;37m    [0;34m▄▄■▄[0;37m   [0;34m█[0;34;44m [0;94;44m░ [0;35;44m▒[0;34m░[0;37m     [0;34m█[0;34;44m [0;94;44m░ [0;35;44m▒[0;34m░[0;37m    [0;34m█[0;37;44m░ ░[0;34m▓[0;37m   [0;34m▓[0;37;44m░ ░[0;34m█[0m
+    [0;37m [0;34m█[0;94;44m░▒░[0;35;44m▓[0;37m   [0;34m█[0;34;44m [0;94;44m░[0;35;44m▒[0;34m▄[0;37m [0;34m▄[0;94;44m▒░░▒[0;35;44m▓[0;35m▌[0;37m  [0;34m█[0;94;44m░▒░[0;35;44m▓[0;34m▓[0;35;44m▄■▄[0;37m  [0;34m█[0;94;44m░▒░[0;35;44m▓[0;34m▓[0;35;44m▄■▄[0;37m  [0;34m█[0;34;44m [0;94;44m░▒ [0;34m▄[0;94;44m ▒░[0;34;44m [0;34m█[0;37m [0m
+    [0;37m [0;34m█[0;34;45m▀▀▀ [0;37m     [0;35m▀[0;35;44m▄▄▄▄[0;35m▀▀▀▀[0;37m    [0;35;44m■[0;34;45m▀▀▀[0;35;44m▄▀[0;34m▀▀▀[0;37m  [0;35;44m■[0;34;45m▀▀▀[0;35;44m▄▀[0;34m▀▀▀[0;37m   [0;35m▀[0;35;44m▄▄▄[0;35m■[0;35;44m▄▄▄[0;35m▀[0;37m  [0m
+    [0;34m▀▀[0;37m                     [0;34m▀▀[0;37m         [0;34m▀▀[0;37m                      [0m
+    """)
+
 # ========================================================================================================
 
 """ Atlas Connection """
@@ -30,7 +44,9 @@ client = MongoClient(uri)
 
 try:
     client.admin.command("ping")
+    show_logo()
     print(colored("\n[+] Connected successfully", Fore.GREEN))
+    
 except Exception as e:
     print(f"Error Occured: {e}")
 
@@ -82,6 +98,53 @@ def f_valid_mails(raw_mails):
         valid_mails.append(mail)
 
     return valid_mails, invalid_mails
+
+# ========================================================================================================
+
+""" Return event & chunk names | No Display """
+
+def return_all_event_names():
+    collection = mongo_collection("Past-Cleaned")
+    events = collection.find({}, {"_id": 0})
+    event_names = []
+
+    for event in events:
+        event_names.extend(event.keys())
+
+    return event_names
+
+def return_all_chunk_names():
+    collection = mongo_collection("Processed-Chunks")
+    chunks = collection.find({}, {"Unique Name": 1 ,"_id":0})
+    chunk_names = []
+    
+    for chunk in chunks:
+        chunk_names.append(chunk["Unique Name"])
+    print("")
+
+    return chunk_names
+
+# ========================================================================================================
+
+""" Pull specific data ( Events & Chunks ) """
+
+def pull_events():
+    event_names = return_all_event_names() # List
+    selected_events = []
+
+    selected_events = questionary.checkbox(
+        "Select Events", event_names
+    ).ask()
+    return selected_events
+
+def pull_chunks():
+    chunks = return_all_chunk_names()
+    selected_chunks = []
+
+    selected_chunks = questionary.checkbox(
+        "Select Chunks", chunks
+    ).ask()
+    return selected_chunks
 
 # ========================================================================================================
 
@@ -160,30 +223,13 @@ def add_new_event():
 
 """ Display Data """
 
-def pullout_event_names():
-
-    # No return for "Show all events in database"
-    # Return event_names list to find out how many events are there for certain functions
-
-    collection = mongo_collection("Past-Cleaned")
-    events = collection.find({}, {"_id": 0})
-    event_names = []
-
-    for event in events:
-        event_names.extend(event.keys())
-
-    for event in event_names:
-        print(f"[{event_names.index(event)}] {event}")
-
-    return event_names # List ["Event-1", "Event-2", "Evet-3"]
-
 def display_events_detail():
     db = client["Letto"]
     collection = db["Past-Cleaned"]
     cursor = collection.find({})
     docs = list(cursor)
     
-    input_range = pull_data() # List
+    input_range = pull_events() # List
 
     for event in input_range:
         doc = next(
@@ -215,28 +261,25 @@ def display_events_detail():
 
     print("")
 
-# ========================================================================================================
+def show_chunks():
+    collection = mongo_collection("Processed-Chunks")
+    selected_chunks = pull_chunks()
 
-# Return event names | No Display
+    for chunk in selected_chunks:
+        doc = collection.find_one({"Unique Name": chunk})
 
-def return_all_event_names():
-    collection = mongo_collection("Past-Cleaned")
-    events = collection.find({}, {"_id": 0})
-    event_names = []
+        if not doc:
+            continue
 
-    for event in events:
-        event_names.extend(event.keys())
+        print("")
+        print(f"[$] Unique Name: {Fore.YELLOW + Style.BRIGHT}{doc["Unique Name"]}{Style.RESET_ALL}")
+        print(f"[$] Description: {Fore.YELLOW + Style.BRIGHT}{doc["Description"]}{Style.RESET_ALL}")
+        print(f"[$] Created Data: {Fore.YELLOW + Style.BRIGHT}{doc["Created Date"]}{Style.RESET_ALL}")
+        print(f"[$] Included Events: {Fore.YELLOW + Style.BRIGHT}{doc["Included Events"]}{Style.RESET_ALL}")
+        print(f"[$] Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(doc["Cleaned Mails"])}{Style.RESET_ALL}")
+        print(f"[$] Removed Duplicates: {Fore.YELLOW + Style.BRIGHT}{len(doc["Duplicate Mails"])}{Style.RESET_ALL}")
 
-    return event_names
-
-def pull_data():
-    event_names = return_all_event_names() # List
-    selected_events = []
-
-    selected_events = questionary.checkbox(
-        "Select toppings", event_names
-    ).ask()
-    return selected_events
+    print("")
 
 # ========================================================================================================
 
@@ -265,7 +308,7 @@ def create_chunk_mails(event_list):
 
 def create_chunk():
     collection = mongo_collection("Processed-Chunks")
-    chosen_events = pull_data() # List
+    chosen_events = pull_events() # List
     total_events = return_all_event_names()
 
     final_data, duplicates = create_chunk_mails(chosen_events)
@@ -296,20 +339,6 @@ def create_chunk():
     print(f"[$] {Fore.GREEN}Successfully created the chunk and pushed to Atlas! {Style.RESET_ALL}")
     print("")
 
-def show_chunks():
-    collection = mongo_collection("Processed-Chunks")
-    cursor = collection.find({})
-    for index, doc in enumerate(cursor):
-        print("")
-        print(f"[$] Index: {Fore.YELLOW + Style.BRIGHT}{index}{Style.RESET_ALL}")
-        print(f"[$] Unique Name: {Fore.YELLOW + Style.BRIGHT}{doc["Unique Name"]}{Style.RESET_ALL}")
-        print(f"[$] Description: {Fore.YELLOW + Style.BRIGHT}{doc["Description"]}{Style.RESET_ALL}")
-        print(f"[$] Created Data: {Fore.YELLOW + Style.BRIGHT}{doc["Created Date"]}{Style.RESET_ALL}")
-        print(f"[$] Included Events: {Fore.YELLOW + Style.BRIGHT}{doc["Included Events"]}{Style.RESET_ALL}")
-        print(f"[$] Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(doc["Cleaned Mails"])}{Style.RESET_ALL}")
-        print(f"[$] Removed Duplicates: {Fore.YELLOW + Style.BRIGHT}{len(doc["Duplicate Mails"])}{Style.RESET_ALL}")
-
-    print("")
 
 def show_chunk_info():
     collection = mongo_collection("Processed-Chunks")
@@ -322,25 +351,42 @@ def show_chunk_info():
         print(f"[$] Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(doc["Cleaned Mails"])}{Style.RESET_ALL}")
         print("")
 
-def return_chunk_names():
+
+# ========================================================================================================
+
+""" Deleting Events & Chunks """
+
+def delete_events():
+    clean_past_collection = mongo_collection("Past-Cleaned")
+    raw_past_collection = mongo_collection("Past-Raw")
+    chosen_events = pull_events()
+
+    conf = questionary.confirm(f"Confirm Deleting '{chosen_events}':").ask()
+
+    if conf:
+        for event in chosen_events:
+            clean_past_collection.delete_one({event: {"$exists" : True}})
+            raw_past_collection.delete_one({event: {"$exists" : True}})
+            print("")
+            print(colored(f"[+] Successfully Deleted Event {event}", Fore.GREEN))
+            print("")
+    else:
+        pass
+
+def delete_chunks():
     collection = mongo_collection("Processed-Chunks")
-    chunks = collection.find({}, {"Unique Name": 1 ,"_id":0})
-    chunk_names = []
-    
-    for chunk in chunks:
-        chunk_names.append(chunk["Unique Name"])
+    chosen_chunks = pull_chunks()
+
+    conf = questionary.confirm(f"Confirm Deleting '{chosen_chunks}':").ask()
     print("")
 
-    return chunk_names
-
-def pull_data_chunk():
-    chunk_names = return_chunk_names() # List
-
-    selected_chunks = questionary.select(
-        "Select the chunk to process", chunk_names
-    ).ask()
-
-    return selected_chunks
+    if conf:
+        for chunk in chosen_chunks:
+            collection.delete_one({"Unique Name": chunk})
+            print(colored(f"[+] Successfully Deleted Chunk: {chunk}", Fore.GREEN))
+    else:
+        print(colored(f"[+] Terminated the Process.", Fore.YELLOW))
+        pass
 
 # ========================================================================================================
 
@@ -350,7 +396,7 @@ def file_output():
     show_chunk_info()
     collection = mongo_collection("Processed-Chunks")
     cursor = collection.find()
-    selected_chunk = pull_data_chunk()
+    selected_chunk = pull_chunks()
     file_name = questionary.text("Enter file name:").ask()
     amount = int(questionary.text("How many mails per line?:").ask())
 
