@@ -27,10 +27,7 @@ def main():
     selected = 0
     result = None
 
-    # --------------------------------------------------
     # MENU RENDERING
-    # --------------------------------------------------
-
     def get_menu_column(column):
 
         def render():
@@ -59,10 +56,6 @@ def main():
             return fragments
 
         return FormattedTextControl(render)
-
-    # --------------------------------------------------
-    # MENU LAYOUT
-    # --------------------------------------------------
 
     def get_layout():
 
@@ -104,10 +97,7 @@ def main():
             ])
         )
 
-    # --------------------------------------------------
     # KEYBOARD CONTROLS
-    # --------------------------------------------------
-
     kb = KeyBindings()
 
     @kb.add("up")
@@ -140,9 +130,7 @@ def main():
     def exit_menu(event):
         event.app.exit()
 
-    # --------------------------------------------------
     # MENU STYLE
-    # --------------------------------------------------
 
     style = Style.from_dict({
         "frame": "fg:#00d7ff",
@@ -150,10 +138,7 @@ def main():
         "normal": "fg:#c0c0c0",
     })
 
-    # --------------------------------------------------
     # MAIN LOOP
-    # --------------------------------------------------
-
     while True:
 
         result = None
@@ -172,10 +157,7 @@ def main():
         if result is None:
             break
 
-        # --------------------------------------------------
         # EXECUTE SELECTED FUNCTION
-        # --------------------------------------------------
-
         if result == "Add new event":
             functions.add_new_event()
 
