@@ -145,7 +145,8 @@ def return_all_chunk_names():
 
 """ Pull specific data ( Events & Chunks ) """
 
-def pull_events():
+def pull_events() -> list:
+    print("")
     event_names = return_all_event_names() # List
     selected_events = []
 
@@ -154,12 +155,19 @@ def pull_events():
     ).ask()
     return selected_events
 
-def pull_chunks():
+def pull_chunks() -> list:
     chunks = return_all_chunk_names()
     selected_chunks = []
 
     selected_chunks = questionary.checkbox(
         "Select Chunks", chunks
+    ).ask()
+    return selected_chunks
+
+def select_chunk() -> str:
+    chunks = return_all_chunk_names()
+    selected_chunks = questionary.select(
+        "Select Chunk", chunks
     ).ask()
     return selected_chunks
 
@@ -200,13 +208,13 @@ def save_to_past_cleaned(event_name, raw_mails):
         collection.insert_one(data)
         print(f"[$] {Fore.GREEN}Raw data inserted successfully to (Past-Raw) collection {Style.RESET_ALL}")
         print(f"[$] {Fore.GREEN}Clean data inserted successfully to (Past-Cleaned) collection {Style.RESET_ALL}")
-        print("")
     except Exception as e:
-        print(f"Error: {e}")
+        print(colored(f"Error: {e}", Fore.RED))
 
 # ========================================================================================================
 
 def add_new_event():
+    print("")
     v_event_name = questionary.text("Enter your event name:").ask()
     v_file_name = questionary.text("Enter file (.xlsx) name to process:").ask()
     v_column = questionary.text("Enter column index for mails (0 for first column):").ask()
@@ -218,8 +226,7 @@ def add_new_event():
         save_to_past_raw(v_event_name, v_extracted_mails)
         save_to_past_cleaned(v_event_name, v_extracted_mails)
     except Exception as e:
-        print(f"Error Occured: {e}\n")
-
+        print(colored(f"Error Occured: {e}\n", Fore.RED))
 
 # ========================================================================================================
 
@@ -261,8 +268,6 @@ def display_events_detail():
         print(f"[$] Duplicate Mails: {Fore.YELLOW + Style.BRIGHT}{len(duplicate_mails)}{Fore.RESET}")
         print(f"[$] Ready to Use Mails: {Fore.YELLOW + Style.BRIGHT}{len(final_mails)}{Fore.RESET}")
 
-    print("")
-
 def show_chunks():
     collection = mongo_collection("Processed-Chunks")
     selected_chunks = pull_chunks()
@@ -280,8 +285,6 @@ def show_chunks():
         print(f"[$] Included Events: {Fore.YELLOW + Style.BRIGHT}{doc["Included Events"]}{Style.RESET_ALL}")
         print(f"[$] Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(doc["Cleaned Mails"])}{Style.RESET_ALL}")
         print(f"[$] Removed Duplicates: {Fore.YELLOW + Style.BRIGHT}{len(doc["Duplicate Mails"])}{Style.RESET_ALL}")
-
-    print("")
 
 # ========================================================================================================
 
@@ -338,8 +341,6 @@ def create_chunk():
 
     print("")
     print(f"[$] {Fore.GREEN}Successfully created the chunk and pushed to Atlas! {Style.RESET_ALL}")
-    print("")
-
 
 def show_chunk_info():
     collection = mongo_collection("Processed-Chunks")
@@ -352,7 +353,6 @@ def show_chunk_info():
         print(f"[$] Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(doc["Cleaned Mails"])}{Style.RESET_ALL}")
         print("")
 
-
 # ========================================================================================================
 
 """ Deleting Events & Chunks """
@@ -362,7 +362,7 @@ def delete_events():
     raw_past_collection = mongo_collection("Past-Raw")
     chosen_events = pull_events()
 
-    conf = questionary.confirm(f"Confirm Deleting '{chosen_events}':").ask()
+    conf = questionary.confirm(f"Confirm Deleting {chosen_events}:").ask()
 
     if conf:
         print("")
@@ -371,10 +371,8 @@ def delete_events():
             clean_past_collection.delete_one({event: {"$exists" : True}})
             raw_past_collection.delete_one({event: {"$exists" : True}})
             print(colored(f"[+] Successfully Deleted Event {event}", Fore.GREEN))
-
-        print("")
     else:
-        print(colored(f"\n[+] Terminated the Process.\n", Fore.YELLOW))
+        print(colored(f"[+] Terminated the Process.", Fore.YELLOW))
         pass
 
 def delete_chunks():
@@ -391,8 +389,6 @@ def delete_chunks():
             collection.delete_one({"Unique Name": chunk})
             print(colored(f"[+] Successfully Deleted Chunk: {chunk}", Fore.GREEN))
 
-        print("")
-
     else:
         print(colored(f"\n[+] Terminated the Process.\n", Fore.YELLOW))
         pass
@@ -405,7 +401,7 @@ def file_output():
     show_chunk_info()
     collection = mongo_collection("Processed-Chunks")
     cursor = collection.find()
-    selected_chunk = pull_chunks()
+    selected_chunk = select_chunk()
     file_name = questionary.text("Enter file name:").ask()
     amount = int(questionary.text("How many mails per line?:").ask())
 
@@ -422,12 +418,12 @@ def file_output():
                     total_lines += 1
             print("")
             print(
-                f"{Fore.GREEN}[$] Exported {total_lines} line(s) in {file_name}{Style.RESET_ALL}.\n"
+                f"{Fore.GREEN}[$] Exported {total_lines} line(s) in {file_name}{Style.RESET_ALL}."
             )
             break
 
     else:
-        print("[!] Error: Chunk not found!")
+        print(colored("[!] Error: Chunk not found!", Fore.RED))
 
 # ========================================================================================================
 

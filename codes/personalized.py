@@ -118,4 +118,4 @@ Best regards,
     print((f"[$] Successful sent emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails}{Style.RESET_ALL}"))
     print(f"[$] Failed to send emails : {Fore.YELLOW + Style.BRIGHT}{failed_emails}{Style.RESET_ALL}")
     print(f"[$] Total processed emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails + failed_emails}\n{Style.RESET_ALL}")
-    print(colored("[$] Personalized Email Certificate sending process completed Successfully\n", Fore.GREEN))
+    print(colored("[$] Personalized Email Certificate sending process completed Successfully", Fore.GREEN))
