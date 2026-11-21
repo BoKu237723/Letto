@@ -57,8 +57,9 @@ def main():
 
         return FormattedTextControl(render)
 
-    def get_layout():
 
+    def get_layout():
+    
         menu = VSplit([
             Window(
                 get_menu_column(0),
@@ -67,22 +68,29 @@ def main():
             ),
             Window(
                 get_menu_column(1),
-                width=49,
+                width=51,
                 height=3,
             ),
             Window(
                 get_menu_column(2),
+                width=40,
                 height=3,
             ),
         ])
-
+    
+        framed_menu = Frame(
+            menu,
+            title=" LETTO / MAIN MENU ",
+            style="class:frame",
+            width=136,
+        )
+    
         return Layout(
             HSplit([
-                Frame(
-                    menu,
-                    title=" LETTO / MAIN MENU ",
-                    style="class:frame"
-                ),
+                VSplit([
+                    Window(width=2),
+                    framed_menu,
+                ]),
                 Window(
                     FormattedTextControl(
                         HTML(
@@ -96,7 +104,7 @@ def main():
                 )
             ])
         )
-
+    
     # KEYBOARD CONTROLS
     kb = KeyBindings()
 

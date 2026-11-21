@@ -8,6 +8,7 @@ from pathlib import Path
 import smtplib
 import json
 import os
+import questionary
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -15,107 +16,125 @@ load_dotenv()
 def colored(text, color):
     return f"{color}{text}{Style.RESET_ALL}"
 
+def check_up():
+    cert_check = questionary.confirm("Have you put the certificates in 'personalized/certificates' folder?").ask()
+    if cert_check:
+        mail_check = questionary.confirm("Have you entered informations in 'personalized/emails.json' file?").ask()
+        if mail_check:
+            return True
+        else:
+            print(colored("[-] Enter the emails and their corresponding files from 'personalized/certificates' in 'personalized/emails.json' file.", Fore.YELLOW))
+            return False
+    else:
+        print(colored("[-] Add certificate files in 'personalized/certificates' folder to send.", Fore.YELLOW))
+        return False
+
 def personalized_mails():
     print("")
-    print(colored("[#] Make sure to enter certificates in the 'personalized/certificates' folder inside", Fore.BLUE + Style.DIM))
-    print(colored("[#] Make sure to fill up and match data in personalized/emails.json", Fore.BLUE + Style.DIM))
+    print(colored("[#] Make sure to enter certificates in the 'personalized/certificates' folder inside", Fore.CYAN + Style.DIM))
+    print(colored("[#] Make sure to fill up and match data in personalized/emails.json", Fore.CYAN + Style.DIM))
     print("")
 
-    SMTP_SERVER = "smtp.gmail.com"
-    SMTP_PORT = 587
-    YOUR_EMAIL = os.getenv("MYEMAIL")
-    YOUR_APP_PASS = os.getenv("MYPASSWORD")
-
-    CERTIFICATES_FOLDER = "personalized/certificates"
-    EMAILS_JSON = "personalized/emails.json"
-
-    EMAIL_SUBJECT = "Your Certificate is Here!"
-
-    #TODO: Change This Part!!!
-    EMAIL_BODY = r"""Dear Participant,
-
-I hope this message finds you well.
-Please find attached your certificate, which recognizes your "achievement, e.g., successful completion of the recent training program" with our organization. 
-We hope you will proudly display this certificate as a testament to your hard work and dedication. Congratulations on your accomplishment!
-
-Best regards,
-"Your Organization Name"
-"Your Contact Information"
-"""
-
-    try:
-        with open(EMAILS_JSON, 'r') as f:
-            email_data = json.load(f)
-    except FileNotFoundError:
-        print(f"[!] Error: {EMAILS_JSON} file not found!")
-        return
-    except json.JSONDecodeError:
-        print(f"[!] Error: {EMAILS_JSON} contains invalid JSON!")
-        return
-
-    # MAIL SMTP SERVER CONNECTION
-    try:
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(YOUR_EMAIL, YOUR_APP_PASS)
-        print(colored("[$] Successfully connected to Gmail SMTP server\n", Fore.GREEN))
-    except Exception as e:
-        print(colored(f"[$] Failed to connect to Gmail: {e}\n", Fore.RED))
-        return
-
-    successful_emails = 0
-    failed_emails = 0
-
-    for entry in email_data:
-        recipient_email = entry.get('email')
-        file_name = entry.get('file')
-
-        if not recipient_email or not file_name:
-            print(f"[!] Skipping Invalid Entry: {entry} ")
-            failed_emails += 1
-            continue
-
-        file_path = os.path.join(CERTIFICATES_FOLDER, file_name)
-
-        if not os.path.exists(file_path):
-            print(f"[!] Certificate Path not found: {file_path}")
-            failed_emails += 1
-            continue
-
+    check = check_up()
+    if check == True:
+        SMTP_SERVER = "smtp.gmail.com"
+        SMTP_PORT = 587
+        YOUR_EMAIL = os.getenv("MYEMAIL")
+        YOUR_APP_PASS = os.getenv("MYPASSWORD")
+    
+        CERTIFICATES_FOLDER = "personalized/certificates"
+        EMAILS_JSON = "personalized/emails.json"
+    
+        EMAIL_SUBJECT = "Your Certificate is Here!"
+    
+        #TODO: Change This Part!!!
+        EMAIL_BODY = r"""Dear Participant,
+    
+    I hope this message finds you well.
+    Please find attached your certificate, which recognizes your "achievement, e.g., successful completion of the recent training program" with our organization. 
+    We hope you will proudly display this certificate as a testament to your hard work and dedication. Congratulations on your accomplishment!
+    
+    Best regards,
+    "Your Organization Name"
+    "Your Contact Information"
+    """
+    
         try:
-            msg = MIMEMultipart()
-            msg['From'] = YOUR_EMAIL
-            msg['To'] = recipient_email
-            msg['Subject'] = EMAIL_SUBJECT
-
-            # email body
-            msg.attach(MIMEText(EMAIL_BODY, 'plain'))
-
-            # certificate file
-            with open(file_path, 'rb') as attachment:
-                part = MIMEBase('application', 'octet-stream')
-                part.set_payload(attachment.read())
-
-            encoders.encode_base64(part)
-            part.add_header(
-                'Content-Disposition',
-                f'attachment; filename= {file_name}'
-            )
-            msg.attach(part)
-
-            # Send
-            server.send_message(msg)
-            print(f"[$] Sent certificate to: {Fore.BLUE + Style.DIM}{recipient_email} - ({file_name}){Style.RESET_ALL}")
-            successful_emails += 1
-
+            with open(EMAILS_JSON, 'r') as f:
+                email_data = json.load(f)
+        except FileNotFoundError:
+            print(f"[!] Error: {EMAILS_JSON} file not found!")
+            return
+        except json.JSONDecodeError:
+            print(f"[!] Error: {EMAILS_JSON} contains invalid JSON!")
+            return
+    
+        # MAIL SMTP SERVER CONNECTION
+        try:
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(YOUR_EMAIL, YOUR_APP_PASS)
+            print(colored("[$] Successfully connected to Gmail SMTP server\n", Fore.GREEN))
         except Exception as e:
-            print(f"[!] Failed to send to {Fore.RED + Style.DIM}{recipient_email}.{Style.RESET_ALL}")
-            failed_emails += 1
+            print(colored(f"[$] Failed to connect to Gmail: {e}\n", Fore.RED))
+            return
+    
+        successful_emails = 0
+        failed_emails = 0
+    
+        for entry in email_data:
+            recipient_email = entry.get('email')
+            file_name = entry.get('file')
+    
+            if not recipient_email or not file_name:
+                print(f"[!] Skipping Invalid Entry: {entry} ")
+                failed_emails += 1
+                continue
+    
+            file_path = os.path.join(CERTIFICATES_FOLDER, file_name)
+    
+            if not os.path.exists(file_path):
+                print(f"[!] Certificate Path not found: {file_path}")
+                failed_emails += 1
+                continue
+    
+            try:
+                msg = MIMEMultipart()
+                msg['From'] = YOUR_EMAIL
+                msg['To'] = recipient_email
+                msg['Subject'] = EMAIL_SUBJECT
+    
+                # email body
+                msg.attach(MIMEText(EMAIL_BODY, 'plain'))
+    
+                # certificate file
+                with open(file_path, 'rb') as attachment:
+                    part = MIMEBase('application', 'octet-stream')
+                    part.set_payload(attachment.read())
+    
+                encoders.encode_base64(part)
+                part.add_header(
+                    'Content-Disposition',
+                    f'attachment; filename= {file_name}'
+                )
+                msg.attach(part)
+    
+                # Send
+                server.send_message(msg)
+                print(f"[$] Sent certificate to: {Fore.CYAN + Style.DIM}{recipient_email} - ({file_name}){Style.RESET_ALL}")
+                successful_emails += 1
+    
+            except Exception as e:
+                print(f"[!] Failed to send to {Fore.YELLOW + Style.DIM}{recipient_email}.{Style.RESET_ALL}")
+                failed_emails += 1
+    
+        server.quit()
+    
+        print("")
+        print((f"[$] Successful sent emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails}{Style.RESET_ALL}"))
+        print(f"[$] Failed to send emails : {Fore.YELLOW + Style.BRIGHT}{failed_emails}{Style.RESET_ALL}")
+        print(f"[$] Total processed emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails + failed_emails}\n{Style.RESET_ALL}")
+        print(colored("[$] Personalized Email Certificate sending process completed Successfully", Fore.GREEN))
 
-    server.quit()
-
-    print("")
-    print((f"[$] Successful sent emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails}{Style.RESET_ALL}"))
-    print(f"[$] Failed to send emails : {Fore.YELLOW + Style.BRIGHT}{failed_emails}{Style.RESET_ALL}")
-    print(f"[$] Total processed emails: {Fore.YELLOW + Style.BRIGHT}{successful_emails + failed_emails}\n{Style.RESET_ALL}")
-    print(colored("[$] Personalized Email Certificate sending process completed Successfully", Fore.GREEN))
+    else:
+        pass
