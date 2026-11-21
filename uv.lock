@@ -48,6 +48,7 @@ dependencies = [
     { name = "dotenv" },
     { name = "openpyxl" },
     { name = "pandas" },
+    { name = "prompt-toolkit" },
     { name = "pymongo" },
     { name = "questionary" },
 ]
@@ -58,6 +59,7 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.1.0" },
+    { name = "prompt-toolkit", specifier = ">=3.0.53" },
     { name = "pymongo", specifier = ">=4.19.0" },
     { name = "questionary", specifier = ">=2.1.1" },
 ]

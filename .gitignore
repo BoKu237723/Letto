@@ -7,12 +7,9 @@ wheels/
 *.egg-info
 
 # testing mails
-re1-mail.txt
-re2-mail.txt
-re3-mail.txt
 *.xlsx
+sample.py
 
 # Virtual environments
 .venv
-emails.txt
 .env
