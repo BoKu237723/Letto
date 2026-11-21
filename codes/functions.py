@@ -99,6 +99,23 @@ def f_valid_mails(raw_mails):
 
     return valid_mails, invalid_mails
 
+def clean_mails(raw_mails): # Return Valid & Invalid & Unique & Duplicate & Final mails as list # TODO
+    valid_mails, invalid_mails = f_valid_mails(raw_mails)
+    unique_mails, duplicates_mails = f_unique_mails(valid_mails)
+    # Duplicate Mails are integers, not list.
+    # Unique Mails are the final mails
+
+    print("")
+    print(f"[$] Processed Raw Mails: {Fore.YELLOW + Style.BRIGHT}{len(raw_mails)}{Style.RESET_ALL}")
+    print(f"[$] Valid Mails: {Fore.YELLOW + Style.BRIGHT}{len(valid_mails)}{Style.RESET_ALL}")
+    print(f"[$] Invalid Mails: {Fore.YELLOW + Style.BRIGHT}{len(invalid_mails)}{Style.RESET_ALL}")
+    print(f"[$] Unique Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
+    print(f"[$] Duplicate Mails: {Fore.YELLOW + Style.BRIGHT}{len(duplicates_mails)}{Style.RESET_ALL}")
+    print(f"[$] Final Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
+    print("")
+
+    return valid_mails, invalid_mails, unique_mails, duplicates_mails, unique_mails
+
 # ========================================================================================================
 
 """ Return event & chunk names | No Display """
@@ -148,24 +165,7 @@ def pull_chunks():
 
 # ========================================================================================================
 
-""" Add New Event ( Raw & Clean ) """
-
-def clean_mails(raw_mails): # Return Valid & Invalid & Unique & Duplicate & Final mails as list # TODO
-    valid_mails, invalid_mails = f_valid_mails(raw_mails)
-    unique_mails, duplicates_mails = f_unique_mails(valid_mails)
-    # Duplicate Mails are integers, not list.
-    # Unique Mails are the final mails
-
-    print("")
-    print(f"[$] Processed Raw Mails: {Fore.YELLOW + Style.BRIGHT}{len(raw_mails)}{Style.RESET_ALL}")
-    print(f"[$] Valid Mails: {Fore.YELLOW + Style.BRIGHT}{len(valid_mails)}{Style.RESET_ALL}")
-    print(f"[$] Invalid Mails: {Fore.YELLOW + Style.BRIGHT}{len(invalid_mails)}{Style.RESET_ALL}")
-    print(f"[$] Unique Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
-    print(f"[$] Duplicate Mails: {Fore.YELLOW + Style.BRIGHT}{len(duplicates_mails)}{Style.RESET_ALL}")
-    print(f"[$] Final Cleaned Mails: {Fore.YELLOW + Style.BRIGHT}{len(unique_mails)}{Style.RESET_ALL}")
-    print("")
-
-    return valid_mails, invalid_mails, unique_mails, duplicates_mails, unique_mails
+""" Save events to 'Past-Cleaned' & 'Past-Raw' """
 
 def save_to_past_raw(event_name, mails):
     collection = mongo_collection("Past-Raw")
@@ -203,6 +203,8 @@ def save_to_past_cleaned(event_name, raw_mails):
         print("")
     except Exception as e:
         print(f"Error: {e}")
+
+# ========================================================================================================
 
 def add_new_event():
     v_event_name = questionary.text("Enter your event name:").ask()
@@ -309,7 +311,6 @@ def create_chunk_mails(event_list):
 def create_chunk():
     collection = mongo_collection("Processed-Chunks")
     chosen_events = pull_events() # List
-    total_events = return_all_event_names()
 
     final_data, duplicates = create_chunk_mails(chosen_events)
 
@@ -364,13 +365,16 @@ def delete_events():
     conf = questionary.confirm(f"Confirm Deleting '{chosen_events}':").ask()
 
     if conf:
+        print("")
+
         for event in chosen_events:
             clean_past_collection.delete_one({event: {"$exists" : True}})
             raw_past_collection.delete_one({event: {"$exists" : True}})
-            print("")
             print(colored(f"[+] Successfully Deleted Event {event}", Fore.GREEN))
-            print("")
+
+        print("")
     else:
+        print(colored(f"\n[+] Terminated the Process.\n", Fore.YELLOW))
         pass
 
 def delete_chunks():
@@ -381,11 +385,16 @@ def delete_chunks():
     print("")
 
     if conf:
+        print("")
+
         for chunk in chosen_chunks:
             collection.delete_one({"Unique Name": chunk})
             print(colored(f"[+] Successfully Deleted Chunk: {chunk}", Fore.GREEN))
+
+        print("")
+
     else:
-        print(colored(f"[+] Terminated the Process.", Fore.YELLOW))
+        print(colored(f"\n[+] Terminated the Process.\n", Fore.YELLOW))
         pass
 
 # ========================================================================================================
